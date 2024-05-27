@@ -1,4 +1,7 @@
+import paho.mqtt.client as mqtt
 import json
+
+valuevector = [(12,True),(14,False),(16,False),(25,True),(31, True)]
 Time = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]
 Powers = [
     'Power 1',
@@ -125,7 +128,7 @@ intraday_price = {
     35: 104.20,
 }
 #demand = {i: original_demand[i % 24] for i in range(168)}
-daily_septic=9865
+daily_septic=6577
 septic_sewage = {
     0: 0,
     1: 0,
@@ -164,7 +167,7 @@ septic_sewage = {
     34: daily_septic/13,
     35: daily_septic/13,
 }
-daily_municipal = 13844
+daily_municipal = 9229
 municipal_ww = {
     0: 0.03*daily_municipal,
     1: 0.03*daily_municipal,
@@ -203,13 +206,13 @@ municipal_ww = {
     34: 0.048*daily_municipal,
     35: 0.048*daily_municipal,
 }
-septic_BOD = 533.928
-municipal_BOD = 109.64286
+septic_BOD = 356
+municipal_BOD = 73
 flex_power_allocation = {i: 0 for i in range(len(Time))}
 flex_energy_allocation = {i: 0 for i in range(len(Time))}
 # initial values for parameters
 
-duration = 3
+duration = 4
 reset=True
 with open('Locked_power_flex.json', 'r') as f:
     locked_power_flex = json.load(f)
@@ -221,7 +224,7 @@ for d in range(duration):
     flex_power_allocation[0+d] += 0
     #Would possible to implement if condition here to make sure that if flexibility is allocated, it cannot be different direction than allocated at that specific time step
     flex_power_allocation[6+d] += 0
-flex_energy_allocation[18] += 1500
+flex_energy_allocation[8] += 1500
 for i, flex in enumerate(flex_power_allocation.items()):
     key, val = flex
     try:
@@ -254,12 +257,12 @@ with open('Locked_energy_flex.json', 'w') as f:
 V_max = 50
 V_max_ox = 2
 V_min_ox = 0
-P_max = 168
+P_max = 112
 P_min = 0
 efficiency = 1.01
 #ratio between diluted oxygen in oxygen storage and sewage storage, i.e. tells how much sewage the oxygen removes
 alfa = 1
-#The ratio between used power of aerators and generated oxygen. 168 kW of aeration generates 69,25 mg/lt of oxygen per h
+#The ratio between used power of aerators and generated oxygen. 112 kW of aeration generates 69,25 mg/lt of oxygen per h
 max_production = 69.25
 powerfactor = P_max/max_production
 #roc of oxygen
@@ -267,4 +270,4 @@ powerfactor = P_max/max_production
 #O_transfer_min = 13
 O_transfer_max = 69.25
 O_transfer_min = 0
-Tank_volume = 4228
+Tank_volume = 2819
